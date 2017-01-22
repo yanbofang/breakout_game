@@ -18,7 +18,7 @@ public class Levels {
 	    public static final int KEY_INPUT_SPEED = 25;
 	    public static final double GROWTH_RATE = 1.1;
 	    public static final int BOUNCER_SPEED = 240;
-	private int levelID;
+	    private int levelID;
 	
 	public Levels(int level){
 		levelID = level;

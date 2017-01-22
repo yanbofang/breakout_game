@@ -1,6 +1,5 @@
 package breakout_game;
 import java.util.ArrayList;
-
 import javafx.scene.text.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -17,7 +16,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 
 
 /**
@@ -38,20 +36,21 @@ public class Breakout_Game extends Application {
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final int KEY_INPUT_SPEED = 25;
     public static final double GROWTH_RATE = 1.1;
-    public static final int BOUNCER_SPEED = 240;
 
     // some things we need to remember during our game
     private Scene myScene;
     private ImageView myPaddle;
     private Bouncer myBouncer;
     private ImageView myTable;
-    private ArrayList<ImageView> myBricks;
+    private ArrayList<Brick> myBricks;
+    private ArrayList<Powerup> myPowerups;
     private Rectangle myTopBlock;
     private Rectangle myBottomBlock;
     private Bricks bricks;
     private Text livesLeft;
     private Text currentLevel;
     private Timeline animation;
+    private Powerup power;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -124,17 +123,14 @@ public class Breakout_Game extends Application {
         Group root = new Group();
         // create a place to see the shapes
         myScene = new Scene(root, width, height, background);
-        // make some shapes and set their properties
+        myTable = createTable();
         myPaddle = createPaddle();
-        bricks = new Bricks();
         Bouncer bouncer = new Bouncer(null);
         myBouncer = bouncer.createBouncer(myPaddle); 
-       
-        Powerup power = new Powerup();
-        
-        myTable = createTable();
-        
+        bricks = new Bricks();
         myBricks = bricks.createBricks(true, true, WIDTH, HEIGHT);
+        power = new Powerup(null);
+        myPowerups = power.createPowerups(myBricks);
         // x and y represent the top left corner, so center it
         myTopBlock = new Rectangle(width / 2 - 25, height / 2 - 100, 50, 50);
         myTopBlock.setFill(Color.RED);
@@ -154,7 +150,10 @@ public class Breakout_Game extends Application {
         root.getChildren().add(livesLeft);
         root.getChildren().add(currentLevel);
         for(int i = 0; i < myBricks.size(); i++){
-        	root.getChildren().add(myBricks.get(i));
+        	root.getChildren().add(myBricks.get(i).getBrickIV());
+        }
+        for(int i = 0; i < myPowerups.size(); i++){
+        	root.getChildren().add(myPowerups.get(i).getPowerupIV());
         }
         root.getChildren().add(myPaddle);
         root.getChildren().add(myBouncer.imageView);
@@ -173,7 +172,8 @@ public class Breakout_Game extends Application {
     // Note, there are more sophisticated ways to animate shapes, but these simple ways work fine to start.
     private void step (double elapsedTime, Stage s, int currentLV) {
         // update attributes
-        myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s, currentLV);
+        myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s, currentLV, myBricks);
+        myPowerups = power.myPowerPos(elapsedTime, myPowerups, myBricks);
         livesLeft.setText("Lives: " + myBouncer.lives());
         myBricks = bricks.checkBricks(myBouncer);
         myTopBlock.setRotate(myBottomBlock.getRotate() - 1);

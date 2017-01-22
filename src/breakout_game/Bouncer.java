@@ -1,5 +1,7 @@
 package breakout_game;
 
+import java.util.ArrayList;
+
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,6 +12,7 @@ public class Bouncer extends Breakout_Game{
     private Integer lives = 2;
     private double X_DIRECTION;
     private double Y_DIRECTION;  
+    private int BOUNCER_SPEED;
     Bouncer myBouncer;
     ImageView imageView;
     
@@ -17,7 +20,13 @@ public class Bouncer extends Breakout_Game{
     	X_DIRECTION = 1;
         Y_DIRECTION = 1;
         imageView = new ImageView(image);
+        BOUNCER_SPEED = 240;
     }
+    
+    public void changeSpeed(int speed){
+    	this.BOUNCER_SPEED = speed;
+    }
+    
     
     public double getXDirection(){
     	return this.X_DIRECTION;
@@ -59,14 +68,11 @@ public class Bouncer extends Breakout_Game{
         }
     }
     
-    private void checkY(Timeline animation, Stage s, int currentLV){
-    	System.out.println((this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3));
-    	if (this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
-            System.out.println("@@@@@@@");
+    private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks){
+    	if (myBricks.isEmpty() && this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
             Levels level = new Levels(currentLV);
             level.nextLevel(s);
     		animation.stop();
-    		
     	}
     	else if (this.imageView.getBoundsInParent().getMaxY() >= HEIGHT){
     			lives --;
@@ -76,8 +82,6 @@ public class Bouncer extends Breakout_Game{
     				this.resetBouncer();
         			animation.pause();
     			}
-    	        
-    			//System.out.println("hhhhhhhhhhhhhh"+myBouncer.imageView.getBoundsInParent().getMaxY());
     		}
     	else if (this.imageView.getY() <= 0){
             	Y_DIRECTION = Y_DIRECTION * -1;  			
@@ -118,10 +122,10 @@ public class Bouncer extends Breakout_Game{
     }
     
     
-    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s, int currentLV) {
+    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks) {
     	checkX();
     	
-    	checkY(animation, s, currentLV);
+    	checkY(animation, s, currentLV, myBricks);
     	
     	checkPaddle(myPaddle);
     	
