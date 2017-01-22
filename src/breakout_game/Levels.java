@@ -20,8 +20,8 @@ public class Levels {
 	    public static final int BOUNCER_SPEED = 240;
 	private int levelID;
 	
-	public Levels(){
-		levelID = 1;
+	public Levels(int level){
+		levelID = level;
 	}
 	
 	public int currentLevel(){
@@ -40,7 +40,7 @@ public class Levels {
 	
 	public void secondLevel(Stage s){
 		Breakout_Game secondBG = new Breakout_Game();
-        Scene scene = secondBG.setupGame(WIDTH, HEIGHT, BACKGROUND);
+        Scene scene = secondBG.setupGame(WIDTH, HEIGHT, BACKGROUND, this.levelID);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();

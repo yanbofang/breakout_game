@@ -7,8 +7,6 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -54,7 +52,6 @@ public class Breakout_Game extends Application {
     private Text livesLeft;
     private Text currentLevel;
     private Timeline animation;
-    private static Levels level;
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -62,13 +59,14 @@ public class Breakout_Game extends Application {
     @Override
     public void start (Stage s) {
         // attach scene to the stage and display it
-        Scene scene = setupGame(WIDTH, HEIGHT, BACKGROUND);
+    	int currentLV = 1;
+        Scene scene = setupGame(WIDTH, HEIGHT, BACKGROUND, currentLV);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();
         // attach "game loop" to timeline to play it
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-                                      e -> step(SECOND_DELAY, s));
+                                      e -> step(SECOND_DELAY, s, currentLV));
         animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
@@ -103,7 +101,7 @@ public class Breakout_Game extends Application {
         return livesLeft;
     }
     
-    private Text createCurrentLevel(Reflection r){
+    private Text createCurrentLevel(Reflection r, Levels level){
         currentLevel = new Text();
         currentLevel.setX(280);
         currentLevel.setY(21);
@@ -121,19 +119,17 @@ public class Breakout_Game extends Application {
      * @param background
      * @return
      */
-    public Scene setupGame (int width, int height, Paint background) {
+    public Scene setupGame (int width, int height, Paint background, int currentLV) {
         // create one top level collection to organize the things in the scene
         Group root = new Group();
         // create a place to see the shapes
         myScene = new Scene(root, width, height, background);
         // make some shapes and set their properties
         myPaddle = createPaddle();
-        
         bricks = new Bricks();
         Bouncer bouncer = new Bouncer(null);
         myBouncer = bouncer.createBouncer(myPaddle); 
-        
-        
+       
         Powerup power = new Powerup();
         
         myTable = createTable();
@@ -149,7 +145,9 @@ public class Breakout_Game extends Application {
         Reflection r = new Reflection();
         r.setFraction(0.7f);
         livesLeft = createLivesLeft(r);
-        currentLevel = createCurrentLevel(r);
+        
+    	Levels level = new Levels(currentLV);
+        currentLevel = createCurrentLevel(r, level);
         
         // order added to the group is the order in which they are drawn
         root.getChildren().add(myTable);
@@ -173,9 +171,9 @@ public class Breakout_Game extends Application {
     
     // Change properties of shapes to animate them 
     // Note, there are more sophisticated ways to animate shapes, but these simple ways work fine to start.
-    private void step (double elapsedTime, Stage s) {
+    private void step (double elapsedTime, Stage s, int currentLV) {
         // update attributes
-        myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s);
+        myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s, currentLV);
         livesLeft.setText("Lives: " + myBouncer.lives());
         myBricks = bricks.checkBricks(myBouncer);
         myTopBlock.setRotate(myBottomBlock.getRotate() - 1);
@@ -230,8 +228,6 @@ public class Breakout_Game extends Application {
      * Start the program.
      */
     public static void main (String[] args) {
-    	Breakout_Game bg = new Breakout_Game();
-    	bg.level = new Levels();
         launch(args);
     }
 }

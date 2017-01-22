@@ -59,11 +59,11 @@ public class Bouncer extends Breakout_Game{
         }
     }
     
-    private void checkY(Timeline animation, Stage s){
+    private void checkY(Timeline animation, Stage s, int currentLV){
     	System.out.println((this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3));
     	if (this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
             System.out.println("@@@@@@@");
-            Levels level = new Levels();
+            Levels level = new Levels(currentLV);
             level.nextLevel(s);
     		animation.stop();
     		
@@ -118,10 +118,10 @@ public class Bouncer extends Breakout_Game{
     }
     
     
-    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s) {
+    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s, int currentLV) {
     	checkX();
     	
-    	checkY(animation, s);
+    	checkY(animation, s, currentLV);
     	
     	checkPaddle(myPaddle);
     	
