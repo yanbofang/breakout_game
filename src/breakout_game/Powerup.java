@@ -11,18 +11,31 @@ public class Powerup {
 	private ArrayList<Powerup> myPowerups;
 	private ImageView powerup;
 	private Brick brick;
+	private String powerType;
 	
 	
 	public Powerup(Brick b){
 		Image pu = new Image(getClass().getClassLoader().getResourceAsStream(GREEN_POWER));
     	powerup = new ImageView(pu);
     	brick = b;
+    	powerType = "";
 	}
 	
 	public ImageView getPowerupIV(){
 		return this.powerup;
 	}
 	
+	public String setPower(){
+		ArrayList<String> powerList = new ArrayList<String>();
+		powerList.add("bigPaddle");
+		powerList.add("smallPaddle");
+		powerList.add("slowPuck");
+		powerList.add("fastPuck");
+		
+		
+		Collections.shuffle(powerList);
+		return powerList.get(0);
+	}
 	
 	public ArrayList<Powerup> createPowerups(ArrayList<Brick> myBricks){
 		Collections.shuffle(myBricks);
@@ -34,6 +47,7 @@ public class Powerup {
 	    	pu.powerup.setX(myBricks.get(i).getBrickIV().getX() + myBricks.get(i).BRICK_WIDTH/4);
 	    	pu.powerup.setY(myBricks.get(i).getBrickIV().getY());
 	    	pu.powerup.setVisible(false);
+	    	pu.powerType = setPower();
 			myBricks.get(i).addPower();
 			myPowerups.add(pu);
 		}
@@ -41,15 +55,55 @@ public class Powerup {
 		return myPowerups;
 	}
 	
-	public ArrayList<Powerup> myPowerPos(double elapsedTime, ArrayList<Powerup> myPowerups, ArrayList<Brick> myBricks){
+	
+	public boolean checkHitPaddle(ImageView myPaddle){
+		return this.powerup.getBoundsInParent().intersects(myPaddle.getBoundsInParent());
+	}
+	
+	
+	public void activatePower(String powerType, ImageView myPaddle, Bouncer myBouncer){
+		if(powerType == "bigPaddle"){
+			bigPaddle(myPaddle);
+		}
+		else if(powerType == "smallPaddle"){
+			smallPaddle(myPaddle);
+		}
+		else if(powerType == "slowPuck"){
+			slowPuck(myBouncer);
+		}
+		else if(powerType == "fastPuck"){
+			fastPuck(myBouncer);
+		}
+	}
+	
+	
+	public void bigPaddle(ImageView myPaddle){
+		myPaddle.setFitWidth(100);
+	}
+	
+	public void smallPaddle(ImageView myPaddle){
+		myPaddle.setFitWidth(40);
+	}
+	
+	public void slowPuck(Bouncer myBouncer){
+		myBouncer.changeSpeed(120);
+	}
+	
+	public void fastPuck(Bouncer myBouncer){
+		myBouncer.changeSpeed(360);
+	}
+	
+	public ArrayList<Powerup> myPowerPos(double elapsedTime, ArrayList<Powerup> myPowerups, ArrayList<Brick> myBricks, ImageView myPaddle, Bouncer myBouncer){
 		for(Powerup pu: myPowerups){
 			if(!myBricks.contains(pu.brick)){
 				pu.powerup.setVisible(true);
-		    	pu.powerup.setY(pu.powerup.getY() + 40 * elapsedTime);   	
+		    	pu.powerup.setY(pu.powerup.getY() + 80 * elapsedTime);
+		    	if(pu.checkHitPaddle(myPaddle)){
+		    		pu.activatePower(pu.powerType, myPaddle, myBouncer);
+		    	}
 			}
 		}
 		return myPowerups;
-		
 	}
 	
 	

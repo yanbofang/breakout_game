@@ -1,9 +1,12 @@
 package breakout_game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Levels {
 	 public static final String TITLE = "Breakout Game";
@@ -19,9 +22,11 @@ public class Levels {
 	    public static final double GROWTH_RATE = 1.1;
 	    public static final int BOUNCER_SPEED = 240;
 	    private int levelID;
+	    private Timeline animation;
 	
-	public Levels(int level){
+	public Levels(int level, Timeline ani){
 		levelID = level;
+		animation = ani;
 	}
 	
 	public int currentLevel(){
@@ -40,10 +45,11 @@ public class Levels {
 	
 	public void secondLevel(Stage s){
 		Breakout_Game secondBG = new Breakout_Game();
-        Scene scene = secondBG.setupGame(WIDTH, HEIGHT, BACKGROUND, this.levelID);
+        Scene scene = secondBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, this.levelID);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();
+        secondBG.setAnimation(s, this.levelID);
 	}
 	
 	public void thirdLevel(){

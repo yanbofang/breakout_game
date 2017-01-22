@@ -44,13 +44,16 @@ public class Breakout_Game extends Application {
     private ImageView myTable;
     private ArrayList<Brick> myBricks;
     private ArrayList<Powerup> myPowerups;
-    private Rectangle myTopBlock;
-    private Rectangle myBottomBlock;
+    private ImageView slowSign;
     private Bricks bricks;
     private Text livesLeft;
     private Text currentLevel;
     private Timeline animation;
     private Powerup power;
+    
+    
+ 
+    
 
     /**
      * Initialize what will be displayed and how it will be updated.
@@ -59,17 +62,21 @@ public class Breakout_Game extends Application {
     public void start (Stage s) {
         // attach scene to the stage and display it
     	int currentLV = 1;
-        Scene scene = setupGame(WIDTH, HEIGHT, BACKGROUND, currentLV);
+        Scene scene = setupGame(WIDTH, HEIGHT, BACKGROUND, s, currentLV);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();
         // attach "game loop" to timeline to play it
-        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-                                      e -> step(SECOND_DELAY, s, currentLV));
-        animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
+        setAnimation(s, currentLV);
         //animation.play();
+    }
+    
+    public void setAnimation(Stage s, int currentLV){
+    	KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
+                e -> step(SECOND_DELAY, s, currentLV));
+    	animation = new Timeline();
+    	animation.setCycleCount(Timeline.INDEFINITE);
+    	animation.getKeyFrames().add(frame);
     }
     
     private ImageView createPaddle(){
@@ -87,6 +94,16 @@ public class Breakout_Game extends Application {
         myTable.setFitHeight(600);
         myTable.setFitWidth(400);
         return myTable;
+    }
+    
+    private ImageView createSlowSign(){
+        Image slow = new Image(getClass().getClassLoader().getResourceAsStream("slow.gif"));
+        slowSign = new ImageView(slow);
+        slowSign.setFitHeight(60);
+        slowSign.setFitWidth(60);
+        slowSign.setX(WIDTH / 2 - 30);
+        slowSign.setY(HEIGHT/2 + 30);
+        return slowSign;
     }
     
     private Text createLivesLeft(Reflection r){
@@ -118,7 +135,7 @@ public class Breakout_Game extends Application {
      * @param background
      * @return
      */
-    public Scene setupGame (int width, int height, Paint background, int currentLV) {
+    public Scene setupGame (int width, int height, Paint background, Stage s, int currentLV) {
         // create one top level collection to organize the things in the scene
         Group root = new Group();
         // create a place to see the shapes
@@ -128,21 +145,19 @@ public class Breakout_Game extends Application {
         Bouncer bouncer = new Bouncer(null);
         myBouncer = bouncer.createBouncer(myPaddle); 
         bricks = new Bricks();
-        myBricks = bricks.createBricks(true, true, WIDTH, HEIGHT);
+        myBricks = bricks.createBricks(WIDTH, HEIGHT, currentLV);
         power = new Powerup(null);
         myPowerups = power.createPowerups(myBricks);
-        // x and y represent the top left corner, so center it
-        myTopBlock = new Rectangle(width / 2 - 25, height / 2 - 100, 50, 50);
-        myTopBlock.setFill(Color.RED);
-        myBottomBlock = new Rectangle(width / 2 - 25, height / 2 + 50, 50, 50);
-        myBottomBlock.setFill(Color.BISQUE);
+
+        
+        slowSign = createSlowSign();
         
         
         Reflection r = new Reflection();
         r.setFraction(0.7f);
         livesLeft = createLivesLeft(r);
         
-    	Levels level = new Levels(currentLV);
+    	Levels level = new Levels(currentLV, animation);
         currentLevel = createCurrentLevel(r, level);
         
         // order added to the group is the order in which they are drawn
@@ -157,50 +172,47 @@ public class Breakout_Game extends Application {
         }
         root.getChildren().add(myPaddle);
         root.getChildren().add(myBouncer.imageView);
-        root.getChildren().add(myTopBlock);
-        root.getChildren().add(myBottomBlock);        
+        root.getChildren().add(slowSign);        
         
 
         // respond to input
-        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        myScene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), s, currentLV));
+        //myScene.setOnKeyPressed(e -> handleCheatKey(e.getCode(), s, currentLV));
         return myScene;
     }
 
     
     // Change properties of shapes to animate them 
     // Note, there are more sophisticated ways to animate shapes, but these simple ways work fine to start.
-    private void step (double elapsedTime, Stage s, int currentLV) {
+    public void step (double elapsedTime, Stage s, int currentLV) {
         // update attributes
         myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s, currentLV, myBricks);
-        myPowerups = power.myPowerPos(elapsedTime, myPowerups, myBricks);
+        myPowerups = power.myPowerPos(elapsedTime, myPowerups, myBricks, myPaddle, myBouncer);
         livesLeft.setText("Lives: " + myBouncer.lives());
         myBricks = bricks.checkBricks(myBouncer);
-        myTopBlock.setRotate(myBottomBlock.getRotate() - 1);
-        myBottomBlock.setRotate(myBottomBlock.getRotate() + 1);
+        slowSign.setRotate(slowSign.getRotate() + 1);
 
         // check for collisions
         // with shapes, can check precisely
-        Shape intersect = Shape.intersect(myTopBlock, myBottomBlock);
-        if (intersect.getBoundsInLocal().getWidth() != -1) {
-            myTopBlock.setFill(Color.PLUM);
-        }
-        else {
-            myTopBlock.setFill(Color.RED);
-        }
+
         // with images can only check bounding box
-        if (myBottomBlock.getBoundsInParent().intersects(myBouncer.imageView.getBoundsInParent())) {
-            myBottomBlock.setFill(Color.BURLYWOOD);
+        if (slowSign.getBoundsInParent().intersects(myBouncer.imageView.getBoundsInParent())) {
+        	myBouncer.changeSpeed(80);
         }
         else {
-            myBottomBlock.setFill(Color.BISQUE);
+        	myBouncer.changeSpeed(200);
         }
     }
 
     // What to do each time a key is pressed
-    private void handleKeyInput (KeyCode code) {
+    private void handleKeyInput (KeyCode code, Stage s, int currentLV) {
     	if (code == KeyCode.SPACE){
     		animation.play();
+    	}
+    	else if (code == KeyCode.C){
+            Levels level = new Levels(currentLV, animation);
+            level.nextLevel(s);
+            animation.stop();
     	}
     	else if (code == KeyCode.RIGHT) {
             myPaddle.setX(myPaddle.getX() + KEY_INPUT_SPEED);
@@ -215,15 +227,8 @@ public class Breakout_Game extends Application {
             myPaddle.setY(myPaddle.getY() + KEY_INPUT_SPEED);
         }
     }
-
-    // What to do each time a key is pressed
-    private void handleMouseInput (double x, double y) {
-        if (myBottomBlock.contains(x, y)) {
-            myBottomBlock.setScaleX(myBottomBlock.getScaleX() * GROWTH_RATE);
-            myBottomBlock.setScaleY(myBottomBlock.getScaleY() * GROWTH_RATE);
-        }
-    }
-
+    
+    
     /**
      * Start the program.
      */

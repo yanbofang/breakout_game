@@ -36,6 +36,7 @@ public class Bouncer extends Breakout_Game{
     	return this.Y_DIRECTION;
     }
     
+    
     public void changeXDirection(){
     	this.X_DIRECTION = this.X_DIRECTION * -1;
     	this.setPos(SECOND_DELAY);
@@ -70,9 +71,9 @@ public class Bouncer extends Breakout_Game{
     
     private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks){
     	if (myBricks.isEmpty() && this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
-            Levels level = new Levels(currentLV);
+            Levels level = new Levels(currentLV, animation);
             level.nextLevel(s);
-    		animation.stop();
+    		//animation.pause();
     	}
     	else if (this.imageView.getBoundsInParent().getMaxY() >= HEIGHT){
     			lives --;
