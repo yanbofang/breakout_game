@@ -7,9 +7,6 @@ import javafx.scene.image.ImageView;
 public class Bricks extends Breakout_Game{
 	
 	private ArrayList<Brick> myBricks;
-	Bouncer bouncer = new Bouncer(null);
-	
-	
 	
 	
     public ArrayList<Brick> createBricks(int WIDTH, int HEIGHT, int currentLV){
@@ -26,9 +23,9 @@ public class Bricks extends Breakout_Game{
     
     public ArrayList<Brick> checkBricks(Bouncer myBouncer, ArrayList<Missile> myMissiles){
     	for(Brick brick: myBricks){
-    		if(brick.getBrickIV().getBoundsInParent().intersects(myBouncer.imageView.getBoundsInParent())){
-    			if(myBouncer.imageView.getBoundsInParent().getMinX() >= brick.getBrickIV().getBoundsInParent().getMinX() 
-    					&& myBouncer.imageView.getBoundsInParent().getMaxX() <= brick.getBrickIV().getBoundsInParent().getMaxX()){
+    		if(brick.getBrickIV().getBoundsInParent().intersects(myBouncer.getBouncerIV().getBoundsInParent())){
+    			if(myBouncer.getBouncerIV().getBoundsInParent().getMinX() >= brick.getBrickIV().getBoundsInParent().getMinX() 
+    					&& myBouncer.getBouncerIV().getBoundsInParent().getMaxX() <= brick.getBrickIV().getBoundsInParent().getMaxX()){
     				myBouncer.changeXDirection();
     			}
     			brick.subtractLives();

@@ -3,8 +3,11 @@ package breakout_game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.effect.Reflection;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -20,7 +23,6 @@ public class Levels {
 	    public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	    public static final int KEY_INPUT_SPEED = 25;
 	    public static final double GROWTH_RATE = 1.1;
-	    public static final int BOUNCER_SPEED = 240;
 	    private int levelID;
 	
 	public Levels(int level){
@@ -31,13 +33,15 @@ public class Levels {
 		return this.levelID;
 	}
 	
-	public void nextLevel(Stage s){
+	
+	public void nextLevel(Stage s, int bouncerSpeed, Text winningText){
 		levelID ++;
+		bouncerSpeed = (int) (bouncerSpeed* GROWTH_RATE);
 		if(levelID >= 4){
-			
+			winningText.setVisible(true);
 		}
 		Breakout_Game nextBG = new Breakout_Game();
-        Scene scene = nextBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, levelID);
+        Scene scene = nextBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, levelID, bouncerSpeed);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();

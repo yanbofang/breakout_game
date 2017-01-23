@@ -5,24 +5,29 @@ import java.util.ArrayList;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Bouncer extends Breakout_Game{
     public static final String BALL_IMAGE = "red_puck.jpg";
-    private Integer lives = 5;
+    private Integer lives = 2;
     private double X_DIRECTION;
     private double Y_DIRECTION;  
     private int BOUNCER_SPEED;
     private boolean protectedBouncer;
-    Bouncer myBouncer;
-    ImageView imageView;
+    private Bouncer myBouncer;
+    private ImageView imageView;
     
-    public Bouncer(Image image){
+    public Bouncer(Image image, int speed){
     	X_DIRECTION = 1;
         Y_DIRECTION = 1;
         imageView = new ImageView(image);
-        BOUNCER_SPEED = 240;
+        BOUNCER_SPEED = speed;
         protectedBouncer = false;
+    }
+    
+    public ImageView getBouncerIV(){
+    	return this.imageView;
     }
     
     public void protectBouncer(){
@@ -54,9 +59,9 @@ public class Bouncer extends Breakout_Game{
     }
     
     
-    public Bouncer createBouncer(ImageView myPaddle){
+    public Bouncer createBouncer(ImageView myPaddle, int speed){
     	Image image = new Image(getClass().getClassLoader().getResourceAsStream(BALL_IMAGE));
-    	myBouncer = new Bouncer(image);
+    	myBouncer = new Bouncer(image, speed);
         myBouncer.imageView.setFitHeight(15);
         myBouncer.imageView.setFitWidth(15);
         myBouncer.resetBouncer();
@@ -84,16 +89,17 @@ public class Bouncer extends Breakout_Game{
 		return count;
 	}
     
-    private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks){
+    private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks, int bouncerSpeed, Text winningText, Text losingText){
     	if (myBricks.size() <= countUndestroyable(myBricks) && this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
             Levels level = new Levels(currentLV);
-            level.nextLevel(s);
+            level.nextLevel(s, bouncerSpeed, winningText);
     		//animation.pause();
     	}
     	else if (this.imageView.getBoundsInParent().getMaxY() >= HEIGHT){
     		if(!this.protectedBouncer){
     			lives --;
     	        if(lives <= 0){
+    	        	losingText.setVisible(true);
     				animation.stop();
     			}else{
     				this.resetBouncer();
@@ -146,10 +152,10 @@ public class Bouncer extends Breakout_Game{
     }
     
     
-    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks) {
+    public Bouncer myBouncerPos(double elapsedTime, ImageView myPaddle, Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks, int bouncerSpeed, Text winningText, Text losingText) {
     	checkX();
     	
-    	checkY(animation, s, currentLV, myBricks);
+    	checkY(animation, s, currentLV, myBricks, bouncerSpeed, winningText, losingText);
     	
     	checkPaddle(myPaddle);
     	
@@ -160,8 +166,8 @@ public class Bouncer extends Breakout_Game{
     
     
     public void setPos(double elapsedTime){
-    	this.imageView.setX(this.imageView.getX() + X_DIRECTION * BOUNCER_SPEED * elapsedTime);
-    	this.imageView.setY(this.imageView.getY() - Y_DIRECTION * BOUNCER_SPEED * elapsedTime);
+    	this.imageView.setX(this.imageView.getX() + X_DIRECTION * this.BOUNCER_SPEED * elapsedTime);
+    	this.imageView.setY(this.imageView.getY() - Y_DIRECTION * this.BOUNCER_SPEED * elapsedTime);
     }
     
     
