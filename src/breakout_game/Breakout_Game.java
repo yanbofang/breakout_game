@@ -206,11 +206,8 @@ public class Breakout_Game extends Application {
         livesLeft.setText("Lives: " + myBouncer.lives());
         
         if(!myMissiles.isEmpty()){
-        	int c = 0;
         	for(Missile m: myMissiles){
         		if(m.checkMissile()){
-        			c++;
-        			System.out.println(c);
         			m.missilePos(elapsedTime);
         		}
         	}
@@ -238,10 +235,22 @@ public class Breakout_Game extends Application {
     		animation.play();
     		root.getChildren().remove(pressToStart);
     	}
+    	else if (code == KeyCode.D){
+    		for (Brick b: myBricks){
+    			b.getBrickIV().setImage(null);
+    		}
+    		myBricks.clear();
+    	}
     	else if (code == KeyCode.C){
             Levels level = new Levels(currentLV);
             level.nextLevel(s);
             animation.stop();
+    	}
+    	else if (code == KeyCode.L){
+    		myBouncer.addLife();
+    	}
+    	else if (code == KeyCode.P){
+    		myBouncer.protectBouncer();
     	}
     	else if (code == KeyCode.RIGHT) {
             myPaddle.setX(myPaddle.getX() + KEY_INPUT_SPEED);

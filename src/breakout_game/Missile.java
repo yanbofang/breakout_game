@@ -38,6 +38,10 @@ public class Missile {
 		return this.used;
 	}
 	
+	public void resetMissile(){
+		this.used = false;
+	}
+	
 	public void useMissile(){
 		this.used = true;
 	}

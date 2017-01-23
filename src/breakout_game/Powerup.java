@@ -60,7 +60,6 @@ public class Powerup {
 			myBricks.get(i).addPower();
 			myPowerups.add(pu);
 		}
-		
 		return myPowerups;
 	}
 	
@@ -93,7 +92,16 @@ public class Powerup {
 		}
 		else if(powerType == "missile"){
 			System.out.println(powerType);
+			resetMissiles(myMissiles);
 	        activateMissile(myPaddle, myMissiles);
+		}
+	}
+	
+	public void resetMissiles(ArrayList<Missile> myMissiles){
+		for(Missile m: myMissiles){
+			if(m.checkMissile()){
+				m.resetMissile();
+			}
 		}
 	}
 	

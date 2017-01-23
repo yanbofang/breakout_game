@@ -13,6 +13,7 @@ public class Bouncer extends Breakout_Game{
     private double X_DIRECTION;
     private double Y_DIRECTION;  
     private int BOUNCER_SPEED;
+    private boolean protectedBouncer;
     Bouncer myBouncer;
     ImageView imageView;
     
@@ -21,6 +22,11 @@ public class Bouncer extends Breakout_Game{
         Y_DIRECTION = 1;
         imageView = new ImageView(image);
         BOUNCER_SPEED = 240;
+        protectedBouncer = false;
+    }
+    
+    public void protectBouncer(){
+    	this.protectedBouncer = true;
     }
     
     public void changeSpeed(int speed){
@@ -85,6 +91,7 @@ public class Bouncer extends Breakout_Game{
     		//animation.pause();
     	}
     	else if (this.imageView.getBoundsInParent().getMaxY() >= HEIGHT){
+    		if(!this.protectedBouncer){
     			lives --;
     	        if(lives <= 0){
     				animation.stop();
@@ -92,6 +99,9 @@ public class Bouncer extends Breakout_Game{
     				this.resetBouncer();
         			animation.pause();
     			}
+    		}else{
+            	Y_DIRECTION = Y_DIRECTION * -1;	
+    		}
     		}
     	else if (this.imageView.getY() <= 0){
             	Y_DIRECTION = Y_DIRECTION * -1;  			
@@ -129,6 +139,10 @@ public class Bouncer extends Breakout_Game{
     
     public Integer lives(){
     	return this.lives;
+    }
+    
+    public void addLife(){
+    	this.lives ++;
     }
     
     

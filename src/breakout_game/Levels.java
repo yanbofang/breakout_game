@@ -33,6 +33,9 @@ public class Levels {
 	
 	public void nextLevel(Stage s){
 		levelID ++;
+		if(levelID >= 4){
+			
+		}
 		Breakout_Game nextBG = new Breakout_Game();
         Scene scene = nextBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, levelID);
         s.setScene(scene);
