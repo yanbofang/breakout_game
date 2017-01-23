@@ -22,6 +22,8 @@ import javafx.util.Duration;
 /**
  * Breakout Game
  * 
+ * The start of the game
+ * 
  * @author Yanbo Fang
  * @author Robert C. Duvall
  */
@@ -151,6 +153,9 @@ public class Breakout_Game extends Application {
 		return myScene;
 	}
 
+	/*
+	 * add to group
+	 */
 	private void addToRoot(Group root) {
 		root.getChildren().add(myTable);
 		root.getChildren().add(livesLeft);
@@ -200,6 +205,9 @@ public class Breakout_Game extends Application {
 		}
 	}
 
+	/*
+	 * handle keyboard input
+	 */
 	private void handleKeyInput(KeyCode code, Group root, Stage s, int currentLV) {
 		if (code == KeyCode.SPACE) {
 			animation.play();
@@ -214,7 +222,7 @@ public class Breakout_Game extends Application {
 			myBricks.clear();
 		} else if (code == KeyCode.C) {
 			Levels level = new Levels(currentLV);
-			level.nextLevel(s, bouncerSpeed, winningText);
+			level.nextLevel(s, bouncerSpeed, winningText, animation);
 			animation.stop();
 		} else if (code == KeyCode.L) {
 			myBouncer.addLife();

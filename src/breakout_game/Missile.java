@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Missile Class: Manage the properties of the Missile powerup
+ * 
+ * @author yanbofang
+ *
+ */
 public class Missile {
 	public static final String MISSILE_IMAGE = "missile.gif";
 	public static final int MISSILE_SPEED = 90;

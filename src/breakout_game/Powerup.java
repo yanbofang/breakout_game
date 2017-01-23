@@ -9,6 +9,12 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Powerup Class: Manage the activities of the powerups
+ * 
+ * @author yanbofang
+ *
+ */
 public class Powerup {
 	public static final String GREEN_POWER = "greenpower.gif";
 	private ArrayList<Powerup> myPowerups;

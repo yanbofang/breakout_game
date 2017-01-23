@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Brick Class: Manage the properties of a brick
+ * 
+ * @author yanbofang
+ *
+ */
 public class Brick {
 	public static final int BRICK_WIDTH = 30;
 	public static final int BRICK_HEIGHT = 20;

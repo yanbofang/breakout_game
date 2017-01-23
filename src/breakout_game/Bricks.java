@@ -5,11 +5,19 @@ import java.util.Iterator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Bricks class: Responsible for managing the ArrayList of bricks such as
+ * creating the list etc.
+ * 
+ * @author yanbofang
+ *
+ */
 public class Bricks extends Breakout_Game {
 	private ArrayList<Brick> myBricks;
 
 	/**
 	 * Create an ArrayList of bricks
+	 * 
 	 * @param WIDTH
 	 * @param HEIGHT
 	 * @param currentLV
@@ -24,6 +32,7 @@ public class Bricks extends Breakout_Game {
 
 	/**
 	 * Remove a brick
+	 * 
 	 * @param iter
 	 * @param brick
 	 */
@@ -34,6 +43,7 @@ public class Bricks extends Breakout_Game {
 
 	/**
 	 * Check if brick has been hit
+	 * 
 	 * @param myBouncer
 	 * @param myMissiles
 	 * @return

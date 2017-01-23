@@ -8,6 +8,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Bouncer Class: Manage the activities and properties of the bouncer (ball)
+ * 
+ * @author yanbofang
+ *
+ */
 public class Bouncer extends Breakout_Game {
 	public static final String BALL_IMAGE = "red_puck.jpg";
 	private Integer lives = 3;
@@ -142,7 +148,7 @@ public class Bouncer extends Breakout_Game {
 			ArrayList<Brick> myBricks, int bouncerSpeed, Text winningText, Text losingText) {
 		checkX();
 
-		checkY(animation, s, currentLV, myBricks, bouncerSpeed, winningText, losingText);
+		checkY(animation, s, currentLV, myBricks, bouncerSpeed, winningText, losingText, myPaddle);
 
 		checkPaddle(myPaddle);
 
@@ -189,14 +195,19 @@ public class Bouncer extends Breakout_Game {
 		return count;
 	}
 
+	private void resetPaddle(ImageView myPaddle) {
+		myPaddle.setX(WIDTH / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
+		myPaddle.setY(HEIGHT - 12);
+	}
+
 	private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks, int bouncerSpeed,
-			Text winningText, Text losingText) {
+			Text winningText, Text losingText, ImageView myPaddle) {
 		if (myBricks.size() <= countUndestroyable(myBricks) && this.imageView.getBoundsInParent().getMinY() <= 0
 				&& (this.imageView.getBoundsInParent().getMinX() >= WIDTH / 3
 						&& this.imageView.getBoundsInParent().getMaxX() <= 2 * WIDTH / 3)) {
+			animation.stop();
 			Levels level = new Levels(currentLV);
-			level.nextLevel(s, bouncerSpeed, winningText);
-			// animation.pause();
+			level.nextLevel(s, bouncerSpeed, winningText, animation);
 		} else if (this.imageView.getBoundsInParent().getMaxY() >= HEIGHT) {
 			if (!this.protectedBouncer) {
 				lives--;
@@ -205,6 +216,7 @@ public class Bouncer extends Breakout_Game {
 					animation.stop();
 				} else {
 					this.resetBouncer();
+					resetPaddle(myPaddle);
 					animation.pause();
 				}
 			} else {
@@ -215,34 +227,41 @@ public class Bouncer extends Breakout_Game {
 		}
 	}
 
+	/**
+	 * Paddle configuration, determine the bouncing direction of the ball after
+	 * hitting the paddle
+	 * 
+	 * @param myPaddle
+	 */
 	private void checkPaddle(ImageView myPaddle) {
+		double xBouncer = this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2;
+		double xPaddle = myPaddle.getBoundsInLocal().getWidth() / 8;
 		if (this.imageView.getBoundsInParent().intersects(myPaddle.getBoundsInParent())) {
-			if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 <= myPaddle.getX()
-					+ myPaddle.getBoundsInLocal().getWidth() / 6) {
+			if (xBouncer <= myPaddle.getX() + xPaddle) {
 				X_DIRECTION = -1.10;
 				Y_DIRECTION = 1;
-			} else if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 >= myPaddle.getX()
-					+ 5 * myPaddle.getBoundsInLocal().getWidth() / 6) {
+			} else if (xBouncer >= myPaddle.getX() + 7 * xPaddle) {
 				X_DIRECTION = 1.10;
 				Y_DIRECTION = 1;
-			} else if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 <= myPaddle.getX()
-					+ 2 * myPaddle.getBoundsInLocal().getWidth() / 6) {
+			} else if (xBouncer <= myPaddle.getX() + 2 * xPaddle) {
 				X_DIRECTION = -0.8;
 				Y_DIRECTION = 1;
-			} else if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 >= myPaddle.getX()
-					+ 4 * myPaddle.getBoundsInLocal().getWidth() / 6) {
+			} else if (xBouncer >= myPaddle.getX() + 6 * xPaddle) {
 				X_DIRECTION = 0.8;
 				Y_DIRECTION = 1;
-			} else if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 <= myPaddle.getX()
-					+ 3 * myPaddle.getBoundsInLocal().getWidth() / 6) {
+			} else if (xBouncer <= myPaddle.getX() + 3 * xPaddle) {
 				X_DIRECTION = -0.5;
 				Y_DIRECTION = 1;
-			} else if (this.imageView.getX() + this.imageView.getBoundsInLocal().getWidth() / 2 >= myPaddle.getX()
-					+ 3 * myPaddle.getBoundsInLocal().getWidth() / 6) {
+			} else if (xBouncer >= myPaddle.getX() + 5 * xPaddle) {
 				X_DIRECTION = 0.5;
+				Y_DIRECTION = 1;
+			} else if (xBouncer <= myPaddle.getX() + 4 * xPaddle) {
+				X_DIRECTION = -0.2;
+				Y_DIRECTION = 1;
+			} else if (xBouncer >= myPaddle.getX() + 4 * xPaddle) {
+				X_DIRECTION = 0.2;
 				Y_DIRECTION = 1;
 			}
 		}
 	}
-
 }

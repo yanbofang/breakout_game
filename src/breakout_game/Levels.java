@@ -11,6 +11,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Levels class
+ * 
+ * Manage creating and switching levels of the game
+ * 
+ * @author yanbofang
+ *
+ */
 public class Levels {
 	public static final String TITLE = "Breakout Game";
 	public static final int WIDTH = 400;
@@ -44,11 +52,13 @@ public class Levels {
 	 * @param bouncerSpeed
 	 * @param winningText
 	 */
-	public void nextLevel(Stage s, int bouncerSpeed, Text winningText) {
+	public void nextLevel(Stage s, int bouncerSpeed, Text winningText, Timeline animation) {
 		levelID++;
 		bouncerSpeed = (int) (bouncerSpeed * GROWTH_RATE);
 		if (levelID >= 4) {
+			animation.stop();
 			winningText.setVisible(true);
+			return;
 		}
 		Breakout_Game nextBG = new Breakout_Game();
 		Scene scene = nextBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, levelID, bouncerSpeed);
