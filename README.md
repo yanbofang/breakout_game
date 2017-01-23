@@ -1,12 +1,11 @@
 #Breakout Game
-###basic info
+##basic info
 *Authors*: Yanbo Fang, Robert Duvall
 *Date Started*: January 18th, 2017
 *Date Finished*: January 23rd, 2017
-*Estimated hours spent*: 20+ hrs
-*Files used to start the project*: lab_bounce
-
-###game info
+*Estimated hours spent*: 30 hrs
+*Files used to start the project*: lab_bounce (ExampleBounce.java and image files)
+##game info
 *How to Play*: In order to win the game, the player needs to clear all the destoyable bricks (the green ones are undestroyable, but still can be destroyed by missiles). After clearing all the bricks, the player needs to bounce the ball into the slot on the other side in order to continue to next level. This game include 3 levels, the player gets 3 lives in each level.
 *Powerups*: Missiles, bigger paddle, smaller paddle, faster ball, slower ball
 *Bricks*: Blue: hit once to destroy; Grey: hit twice to destroy; Green: undestroyable (could be destroyed by missile)
