@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class Bouncer extends Breakout_Game{
     public static final String BALL_IMAGE = "red_puck.jpg";
-    private Integer lives = 2;
+    private Integer lives = 5;
     private double X_DIRECTION;
     private double Y_DIRECTION;  
     private int BOUNCER_SPEED;
@@ -26,7 +26,6 @@ public class Bouncer extends Breakout_Game{
     public void changeSpeed(int speed){
     	this.BOUNCER_SPEED = speed;
     }
-    
     
     public double getXDirection(){
     	return this.X_DIRECTION;
@@ -69,9 +68,19 @@ public class Bouncer extends Breakout_Game{
         }
     }
     
+	private int countUndestroyable(ArrayList<Brick> myBricks){
+		int count = 0;
+		for(Brick brick: myBricks){
+			if(brick.checkBrickType() == "undestroyable"){
+				count++;
+			}
+		}
+		return count;
+	}
+    
     private void checkY(Timeline animation, Stage s, int currentLV, ArrayList<Brick> myBricks){
-    	if (myBricks.isEmpty() && this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
-            Levels level = new Levels(currentLV, animation);
+    	if (myBricks.size() <= countUndestroyable(myBricks) && this.imageView.getBoundsInParent().getMinY() <= 0 && (this.imageView.getBoundsInParent().getMinX() >= WIDTH/3 && this.imageView.getBoundsInParent().getMaxX() <= 2*WIDTH/3)){
+            Levels level = new Levels(currentLV);
             level.nextLevel(s);
     		//animation.pause();
     	}

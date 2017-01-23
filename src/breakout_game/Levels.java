@@ -22,11 +22,9 @@ public class Levels {
 	    public static final double GROWTH_RATE = 1.1;
 	    public static final int BOUNCER_SPEED = 240;
 	    private int levelID;
-	    private Timeline animation;
 	
-	public Levels(int level, Timeline ani){
+	public Levels(int level){
 		levelID = level;
-		animation = ani;
 	}
 	
 	public int currentLevel(){
@@ -35,25 +33,13 @@ public class Levels {
 	
 	public void nextLevel(Stage s){
 		levelID ++;
-		if(levelID == 2){
-			secondLevel(s);
-		}
-		else if(levelID == 3){
-			thirdLevel();
-		}
-	}
-	
-	public void secondLevel(Stage s){
-		Breakout_Game secondBG = new Breakout_Game();
-        Scene scene = secondBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, this.levelID);
+		Breakout_Game nextBG = new Breakout_Game();
+        Scene scene = nextBG.setupGame(WIDTH, HEIGHT, BACKGROUND, s, levelID);
         s.setScene(scene);
         s.setTitle(TITLE);
         s.show();
-        secondBG.setAnimation(s, this.levelID);
+        nextBG.setAnimation(s, levelID);
 	}
-	
-	public void thirdLevel(){
-		
-	}
+
 	
 }

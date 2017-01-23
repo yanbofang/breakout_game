@@ -44,17 +44,16 @@ public class Breakout_Game extends Application {
     private ImageView myTable;
     private ArrayList<Brick> myBricks;
     private ArrayList<Powerup> myPowerups;
+    private ArrayList<Missile> myMissiles;
     private ImageView slowSign;
     private Bricks bricks;
     private Text livesLeft;
     private Text currentLevel;
+    private Text pressToStart;
     private Timeline animation;
     private Powerup power;
+    private Group root;
     
-    
- 
-    
-
     /**
      * Initialize what will be displayed and how it will be updated.
      */
@@ -127,6 +126,18 @@ public class Breakout_Game extends Application {
         currentLevel.setEffect(r);
         return currentLevel;
     }
+    
+    private Text createPressToStart(Reflection r){
+    	pressToStart = new Text();
+    	pressToStart.setX(WIDTH/4);
+    	pressToStart.setY(3*HEIGHT/4);
+    	pressToStart.setFont(Font.font ("Verdana", 20));
+    	pressToStart.setText("Press Space to Start");
+    	pressToStart.setFill(Color.DARKCYAN);
+    	pressToStart.setEffect(r);
+        return pressToStart;
+    }
+    
     // Create the game's "scene": what shapes will be in the game and their starting properties
     /**
      * 
@@ -137,7 +148,7 @@ public class Breakout_Game extends Application {
      */
     public Scene setupGame (int width, int height, Paint background, Stage s, int currentLV) {
         // create one top level collection to organize the things in the scene
-        Group root = new Group();
+        root = new Group();
         // create a place to see the shapes
         myScene = new Scene(root, width, height, background);
         myTable = createTable();
@@ -147,18 +158,18 @@ public class Breakout_Game extends Application {
         bricks = new Bricks();
         myBricks = bricks.createBricks(WIDTH, HEIGHT, currentLV);
         power = new Powerup(null);
-        myPowerups = power.createPowerups(myBricks);
-
-        
+        Missile missile = new Missile(myPaddle);
+        myMissiles = missile.createMissiles(myPaddle);
+        myPowerups = power.createPowerups(myBricks);   
         slowSign = createSlowSign();
-        
-        
         Reflection r = new Reflection();
         r.setFraction(0.7f);
         livesLeft = createLivesLeft(r);
-        
-    	Levels level = new Levels(currentLV, animation);
+    	Levels level = new Levels(currentLV);
         currentLevel = createCurrentLevel(r, level);
+        pressToStart = createPressToStart(r);
+
+        
         
         // order added to the group is the order in which they are drawn
         root.getChildren().add(myTable);
@@ -170,13 +181,17 @@ public class Breakout_Game extends Application {
         for(int i = 0; i < myPowerups.size(); i++){
         	root.getChildren().add(myPowerups.get(i).getPowerupIV());
         }
+        for(int i = 0; i < myMissiles.size(); i++){
+        	root.getChildren().add(myMissiles.get(i).getMissileIV());
+        }
         root.getChildren().add(myPaddle);
         root.getChildren().add(myBouncer.imageView);
         root.getChildren().add(slowSign);        
+        root.getChildren().add(pressToStart);
         
 
         // respond to input
-        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), s, currentLV));
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root, s, currentLV));
         //myScene.setOnKeyPressed(e -> handleCheatKey(e.getCode(), s, currentLV));
         return myScene;
     }
@@ -187,10 +202,23 @@ public class Breakout_Game extends Application {
     public void step (double elapsedTime, Stage s, int currentLV) {
         // update attributes
         myBouncer = myBouncer.myBouncerPos(elapsedTime, myPaddle, animation, s, currentLV, myBricks);
-        myPowerups = power.myPowerPos(elapsedTime, myPowerups, myBricks, myPaddle, myBouncer);
+        myPowerups = power.myPowerPos(elapsedTime, myPowerups, myBricks, myPaddle, myBouncer, myMissiles);
         livesLeft.setText("Lives: " + myBouncer.lives());
-        myBricks = bricks.checkBricks(myBouncer);
+        
+        if(!myMissiles.isEmpty()){
+        	int c = 0;
+        	for(Missile m: myMissiles){
+        		if(m.checkMissile()){
+        			c++;
+        			System.out.println(c);
+        			m.missilePos(elapsedTime);
+        		}
+        	}
+        }
+        
+        myBricks = bricks.checkBricks(myBouncer, myMissiles);
         slowSign.setRotate(slowSign.getRotate() + 1);
+        //System.out.println(myMissiles.size());
 
         // check for collisions
         // with shapes, can check precisely
@@ -205,12 +233,13 @@ public class Breakout_Game extends Application {
     }
 
     // What to do each time a key is pressed
-    private void handleKeyInput (KeyCode code, Stage s, int currentLV) {
+    private void handleKeyInput (KeyCode code, Group root, Stage s, int currentLV) {
     	if (code == KeyCode.SPACE){
     		animation.play();
+    		root.getChildren().remove(pressToStart);
     	}
     	else if (code == KeyCode.C){
-            Levels level = new Levels(currentLV, animation);
+            Levels level = new Levels(currentLV);
             level.nextLevel(s);
             animation.stop();
     	}

@@ -23,17 +23,24 @@ public class Brick {
      * @param brickType
      * @param powerup
      */
-    public Brick(int width, int height, String brickType, boolean power){
+    public Brick(int width, int height, String bt, boolean power){
     	WIDTH = width;
     	HEIGHT = height;
+    	brickType = bt;
     	Image brickImage = new Image(getClass().getClassLoader().getResourceAsStream(brickType + "_brick.gif"));
     	brick = new ImageView(brickImage);
     	if(brickType == "typical"){
         	brickLives = 1;
     	}else if(brickType == "tough"){
     		brickLives = 2;
+    	}else if(brickType == "undestroyable"){
+    		brickLives = 1000;
     	}
     	powerup = power;
+    }
+    
+    public String checkBrickType(){
+    	return this.brickType;
     }
     
     public void subtractLives(){
@@ -62,13 +69,29 @@ public class Brick {
             createHorizontalBricks(myBricks, "typical", 8, 3, WIDTH / 4, HEIGHT/ 4);
             createInclinedBricks1(myBricks, "tough", 5, WIDTH / 6, HEIGHT/ 4);
             createInclinedBricks2(myBricks, "tough", 5, 5*WIDTH/6, HEIGHT/ 4);
-    		
+            createUndestroyableBricks(myBricks, 3, WIDTH/3, HEIGHT/2);
     	}else if(currentLV == 2){
+            createHorizontalBricks(myBricks, "typical", 12, 2, WIDTH/10, HEIGHT/ 4);
+            createInclinedBricks1(myBricks, "typical", 8, WIDTH/6, HEIGHT/ 4);
+            createInclinedBricks2(myBricks, "tough", 8, 5*WIDTH/6, HEIGHT/ 4);
+            createUndestroyableBricks(myBricks, 2, WIDTH/2.32, HEIGHT/4);
+    	}else if(currentLV == 3){
             createHorizontalBricks(myBricks, "typical", 12, 4, WIDTH/10, HEIGHT/ 4);
             createInclinedBricks1(myBricks, "tough", 10, WIDTH/6, HEIGHT/ 4);
             createInclinedBricks2(myBricks, "tough", 10, 5*WIDTH/6, HEIGHT/ 4);
-    	}else if(currentLV == 3){
-    		
+            createUndestroyableBricks(myBricks, 3, WIDTH/3, HEIGHT/4);
+    	}
+    }
+    
+    
+    public void createUndestroyableBricks(ArrayList<Brick> myBricks, int length, double width, double height){
+    	for(int i = 0; i < length; i++){
+    		Brick tb = new Brick(WIDTH, HEIGHT, "undestroyable", false);
+    		tb.brick.setFitHeight(BRICK_HEIGHT);
+    		tb.brick.setFitWidth(BRICK_WIDTH);
+    		tb.brick.setX(width - tb.brick.getBoundsInLocal().getWidth()/1.09 + i * 80);
+    		tb.brick.setY(height - tb.brick.getBoundsInLocal().getHeight() / 2);
+    		myBricks.add(tb);
     	}
     }
     
