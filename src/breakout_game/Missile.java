@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 
 public class Missile {
 	public static final String MISSILE_IMAGE = "missile.gif";
+	public static final int MISSILE_SPEED = 90;
 	private ImageView image;
 	private int width = 22;
 	private int height = 50;
@@ -14,53 +15,89 @@ public class Missile {
 	private double missileY;
 	private ArrayList<Missile> myMissiles;
 	private boolean used;
-	
-	public Missile(ImageView myPaddle){
+
+	/**
+	 * Missile constructor
+	 * 
+	 * @param myPaddle
+	 */
+	public Missile(ImageView myPaddle) {
 		Image m = new Image(getClass().getClassLoader().getResourceAsStream(MISSILE_IMAGE));
 		image = new ImageView(m);
 		this.setInitialMissilePos(myPaddle);
-    	image.setFitWidth(width);
-    	image.setFitHeight(height);
-    	image.setVisible(false);
+		image.setFitWidth(width);
+		image.setFitHeight(height);
+		image.setVisible(false);
 		used = false;
 	}
-	
-	public void setInitialMissilePos(ImageView myPaddle){
+
+	/**
+	 * Set the initial position of the missile
+	 * 
+	 * @param myPaddle
+	 */
+	public void setInitialMissilePos(ImageView myPaddle) {
 		this.missileX = myPaddle.getX();
 		this.missileY = myPaddle.getY();
-    	this.image.setX(this.missileX + width/2);
-    	this.image.setY(this.missileY);
-    	image.setVisible(true);
+		this.image.setX(this.missileX + width / 2);
+		this.image.setY(this.missileY);
+		image.setVisible(true);
 	}
-	
-	
-	public boolean checkMissile(){
+
+	/**
+	 * Check if the missile has been used
+	 * 
+	 * @return
+	 */
+	public boolean checkMissile() {
 		return this.used;
 	}
-	
-	public void resetMissile(){
+
+	/**
+	 * Reset the missile to unused
+	 */
+	public void resetMissile() {
 		this.used = false;
 	}
-	
-	public void useMissile(){
+
+	/**
+	 * Set the used field of missile to true
+	 */
+	public void useMissile() {
 		this.used = true;
 	}
-	
-	public ImageView getMissileIV(){
+
+	/**
+	 * Get the ImageView of the missile
+	 * 
+	 * @return
+	 */
+	public ImageView getMissileIV() {
 		return this.image;
 	}
-	
-	public ArrayList<Missile> createMissiles(ImageView myPaddle){
+
+	/**
+	 * Create an ArrayList of missiles
+	 * 
+	 * @param myPaddle
+	 * @return
+	 */
+	public ArrayList<Missile> createMissiles(ImageView myPaddle) {
 		myMissiles = new ArrayList<Missile>();
-		for(int i = 0; i < 5; i++){
+		for (int i = 0; i < 5; i++) {
 			Missile m = new Missile(myPaddle);
 			myMissiles.add(m);
 		}
 		return myMissiles;
 	}
-	
-	public void missilePos(double elapsedTime){
-		this.image.setY(this.image.getY() - 80 * elapsedTime);
+
+	/**
+	 * Update the missile positions
+	 * 
+	 * @param elapsedTime
+	 */
+	public void missilePos(double elapsedTime) {
+		this.image.setY(this.image.getY() - MISSILE_SPEED * elapsedTime);
 	}
-	
+
 }
