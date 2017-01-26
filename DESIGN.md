@@ -1,7 +1,12 @@
-## High-level design of this game
+##High-level design of this game
 * This program consists of 10 classes: The Breakout_Game.java serves as the core of the program - setting up the game, timeline, handling the input... The Bouncer.java manages the activities and properties of the ball such as checking the collisions and its bouncing directions. The Brick.java serves as a superclass for Typical_Brick, Tough_Brick and Undestroyable_Brick classes, which all extend Brick.java. The Bricks.java class, different from the Brick.java, manages an ArrayList of Brick objects. The Powerup.java manages the powerups properties, and the Missile class controls the activities of the missile such as its movements. The Levels.java class allows the game to switch to next level.
 
-## How to add new features
+##How to add new features
 * To add new levels, one simply needs provide different setups of bricks in the Bricks.java. After that one needs to change the maxLevel value in Levels.java from 3(since currently we have 3 levels) to the maximum level he/she want. Then the nextLevel method in Levels class will take care of everything else related to switching level.
 * To add a new type of brick, one needs to create a subclass that extends Brick.java. In addition, one need to set the new bricks' initial position in Bricks.java
 * To add a power-up, one needs to go into Powerup.java, adding the power-up into setPower() and add function calls to perform the activities after initializing the power-up.
+
+
+##Design trade-offs
+1. For Brick.java, I decided to make it a superclass for all 3 types of bricks (typical, tough, undestroyable) rather than putting them all in Brick.java. The pros of this decision is that the code now looks much more organized, and it is much easier to add another feature - let's say another type of brick. As we add more features, the previous version would be hard to organize and for people to understand. The cons is that it seems a little extra and unnecessary at this stage - and especially considering that there won't likely be too many different types of bricks even in the future.
+2. For the image of the Paddle, I created it directly in Breakout_Game.java class. I chose to do it this way because I thought there wouldn't be many activities and codings related to the Paddle other than moving it around. Apparently, the cons of this approach would be that it has made the already crowded Breakout _Game class even more stuffed. And the pros would be it is a *little* bit easier to implement. However, looking back at this stage, I would rather take the extra effort to create a separate class for Paddle. As I created powerups that makes bigger or smaller paddle, the Paddle class appeared useful, although I didn't think so before. Thus it is always good practice to make things more organized so that in the future, it is easy to make changes and updates.
