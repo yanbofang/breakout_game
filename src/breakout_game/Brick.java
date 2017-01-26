@@ -3,6 +3,9 @@ package breakout_game;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+//This entire file, along with Typical_Brick.java, Tough_Brick.java, Undestroyable_Brick.java is part of my masterpiece.
+//Yanbo Fang
+
 /**
  * Brick Class: Manage the properties of a brick
  * 

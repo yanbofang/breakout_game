@@ -1,5 +1,9 @@
 package breakout_game;
 
+//This entire file, along with Brick.java, Typical_Brick.java, Tough_Brick.java is part of my masterpiece.
+//Yanbo Fang
+
+
 /**
  * Undestroyable Brick class, extends Brick
  * @author yanbofang
