@@ -1,5 +1,4 @@
 package breakout_game;
-
 import java.util.ArrayList;
 import javafx.scene.text.*;
 import javafx.animation.KeyFrame;
@@ -18,7 +17,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 /**
  * Breakout Game
  * 
@@ -41,7 +39,6 @@ public class Breakout_Game extends Application {
 	public static final int KEY_INPUT_SPEED = 25;
 	public static final double GROWTH_RATE = 1.1;
 	public static final int INITIAL_SPEED = 200;
-
 	// some things we need to remember during our game
 	private Scene myScene;
 	private ImageView myPaddle;
@@ -60,7 +57,6 @@ public class Breakout_Game extends Application {
 	private Timeline animation;
 	private Powerup power;
 	private int bouncerSpeed;
-
 	/**
 	 * Initialize what will be displayed and how it will be updated.
 	 */
@@ -74,7 +70,6 @@ public class Breakout_Game extends Application {
 		s.show();
 		setAnimation(s, currentLV);
 	}
-
 	/**
 	 * Set the animation
 	 * 
@@ -87,7 +82,6 @@ public class Breakout_Game extends Application {
 		animation.setCycleCount(Timeline.INDEFINITE);
 		animation.getKeyFrames().add(frame);
 	}
-
 	private ImageView createIV(ImageView iv, String imageFile, double width, double height, double x, double y) {
 		Image image = new Image(getClass().getClassLoader().getResourceAsStream(imageFile));
 		iv = new ImageView(image);
@@ -97,7 +91,6 @@ public class Breakout_Game extends Application {
 		iv.setY(y);
 		return iv;
 	}
-
 	private Text createText(Text t, Reflection r, double x, double y, String message, int fontSize) {
 		t = new Text();
 		t.setX(x);
@@ -108,7 +101,6 @@ public class Breakout_Game extends Application {
 		t.setEffect(r);
 		return t;
 	}
-
 	/**
 	 * Create the game's "scene": what shapes will be in the game and their
 	 * starting properties
@@ -152,7 +144,6 @@ public class Breakout_Game extends Application {
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root, s, currentLV));
 		return myScene;
 	}
-
 	/*
 	 * add to group
 	 */
@@ -176,7 +167,6 @@ public class Breakout_Game extends Application {
 		root.getChildren().add(winningText);
 		root.getChildren().add(losingText);
 	}
-
 	/**
 	 * Change properties of shapes to animate them
 	 * 
@@ -204,7 +194,6 @@ public class Breakout_Game extends Application {
 			myBouncer.changeSpeed(200);
 		}
 	}
-
 	/*
 	 * handle keyboard input
 	 */
@@ -238,7 +227,6 @@ public class Breakout_Game extends Application {
 			myPaddle.setY(myPaddle.getY() + KEY_INPUT_SPEED);
 		}
 	}
-
 	/**
 	 * Start the program.
 	 */

@@ -1,0 +1,7 @@
+## High-level design of this game
+* This program consists of 10 classes: The Breakout_Game.java serves as the core of the program - setting up the game, timeline, handling the input... The Bouncer.java manages the activities and properties of the ball such as checking the collisions and its bouncing directions. The Brick.java serves as a superclass for Typical_Brick, Tough_Brick and Undestroyable_Brick classes, which all extend Brick.java. The Bricks.java class, different from the Brick.java, manages an ArrayList of Brick objects. The Powerup.java manages the powerups properties, and the Missile class controls the activities of the missile such as its movements. The Levels.java class allows the game to switch to next level.
+
+## How to add new features
+* To add new levels, one simply needs provide different setups of bricks in the Bricks.java. After that one needs to change the maxLevel value in Levels.java from 3(since currently we have 3 levels) to the maximum level he/she want. Then the nextLevel method in Levels class will take care of everything else related to switching level.
+* To add a new type of brick, one needs to create a subclass that extends Brick.java. In addition, one need to set the new bricks' initial position in Bricks.java
+* To add a power-up, one needs to go into Powerup.java, adding the power-up into setPower() and add function calls to perform the activities after initializing the power-up.

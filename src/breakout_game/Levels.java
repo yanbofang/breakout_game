@@ -25,6 +25,7 @@ public class Levels {
 	public static final int HEIGHT = 600;
 	public static final Paint BACKGROUND = Color.WHITE;
 	public static final double GROWTH_RATE = 1.1;
+	private int maxLevel = 3;
 	private int levelID;
 
 	/**
@@ -55,7 +56,7 @@ public class Levels {
 	public void nextLevel(Stage s, int bouncerSpeed, Text winningText, Timeline animation) {
 		levelID++;
 		bouncerSpeed = (int) (bouncerSpeed * GROWTH_RATE);
-		if (levelID >= 4) {
+		if (levelID > maxLevel) {
 			animation.stop();
 			winningText.setVisible(true);
 			return;
