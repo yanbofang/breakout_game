@@ -1,4 +1,6 @@
 #Breakout Game
+![Breakout Game UI](images/Breakout_Game_UI.png "UI")
+
 ##basic info
 *Authors*: Yanbo Fang, Robert Duvall
 *Date Started*: January 18th, 2017
